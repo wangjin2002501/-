@@ -7,20 +7,20 @@ export const getTradingAdvice = async (leaderPnl: number, followerPnl: number, m
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Current BTC Market Context:
-      - Current BTC Price: $${marketPrice.toLocaleString()}
-      - Leader Cumulative PnL: $${leaderPnl.toFixed(2)}
-      - Follower (Reverse 5x) Cumulative PnL: $${followerPnl.toFixed(2)}
+      contents: `当前 BTC 市场背景:
+      - 当前 BTC 价格: $${marketPrice.toLocaleString()}
+      - 带单端 (Leader) 累计盈亏: $${leaderPnl.toFixed(2)}
+      - 跟单端 (5倍反向跟单) 累计盈亏: $${followerPnl.toFixed(2)}
       
-      Analyze this "Reverse Copy Trading" strategy performance. Explain why the follower might be winning or losing compared to the leader. Provide a short, professional trading insight for a beginner trader.`,
+      请分析这种“反向跟单”策略在当前行情下的表现。解释为什么跟单端相对于带单端在盈利或亏损。请以专业、简洁且通俗易懂的方式为新手交易者提供中文投资洞察，长度在 150 字以内。`,
       config: {
         temperature: 0.7,
-        maxOutputTokens: 250,
+        maxOutputTokens: 350,
       }
     });
     return response.text;
   } catch (error) {
     console.error("Gemini Insight Error:", error);
-    return "Market analysis temporarily unavailable. Continue monitoring volatility.";
+    return "市场分析暂时不可用。请继续关注行情波动。";
   }
 };
