@@ -1,0 +1,5 @@
+{
+  "name": "BTC Reverse Mirror Bot Simulator",
+  "description": "A sophisticated Bitcoin contract reverse mirror trading simulator. It features a Leader terminal and a Follower terminal that executes opposite trades with 5x leverage logic using BroadcastChannel for cross-tab or side-by-side communication.",
+  "requestFramePermissions": []
+}
