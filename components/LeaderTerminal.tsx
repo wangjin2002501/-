@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Position, Side } from '../types';
+import { Position, Side } from '../types.ts';
 
 interface Props {
   btcPrice: number;
@@ -14,12 +14,9 @@ export const LeaderTerminal: React.FC<Props> = ({ btcPrice, onSignal, onPnlUpdat
   const [cumulativePnl, setCumulativePnl] = useState(0);
   const [isScanning, setIsScanning] = useState(true);
 
-  // 当监控地址改变时，重置扫描状态并给予视觉反馈
   useEffect(() => {
     setIsScanning(false);
     const timer = setTimeout(() => setIsScanning(true), 600);
-    // 地址变了，通常需要清空之前的模拟持仓（可选，这里保留逻辑）
-    // setPosition(null); 
     return () => clearTimeout(timer);
   }, [watchAddress]);
 

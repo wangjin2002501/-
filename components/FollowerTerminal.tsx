@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Position, Side, TradeSignal } from '../types';
-import { lighterApi } from '../services/lighterService';
+import { Position, Side, TradeSignal } from '../types.ts';
+import { lighterApi } from '../services/lighterService.ts';
 
 interface Props {
   btcPrice: number;
@@ -20,7 +20,6 @@ export const FollowerTerminal: React.FC<Props> = ({ btcPrice, channelName, onPnl
     setLogs(prev => [{msg: `[${new Date().toLocaleTimeString()}] ${msg}`, type}, ...prev].slice(0, 10));
   };
 
-  // 关键修复：当 apiKey 改变时，通知 lighterApi 服务更新
   useEffect(() => {
     lighterApi.updateCredentials(apiKey, 'https://arb1.arbitrum.io/rpc');
     if (apiKey) {

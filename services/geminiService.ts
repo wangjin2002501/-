@@ -1,9 +1,22 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// 安全地获取 API Key，防止 process 未定义导致黑屏
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || '';
+  } catch (e) {
+    return '';
+  }
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export const getTradingAdvice = async (leaderPnl: number, followerPnl: number, marketPrice: number) => {
+  if (!getApiKey()) {
+    return "提示：未检测到 Gemini API Key，AI 策略分析已禁用。";
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -18,9 +31,9 @@ export const getTradingAdvice = async (leaderPnl: number, followerPnl: number, m
         maxOutputTokens: 350,
       }
     });
-    return response.text;
+    return response.text || "暂无分析数据。";
   } catch (error) {
     console.error("Gemini Insight Error:", error);
-    return "市场分析暂时不可用。请继续关注行情波动。";
+    return "市场分析暂时不可用。请检查网络连接。";
   }
 };

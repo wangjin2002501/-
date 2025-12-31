@@ -1,5 +1,5 @@
 
-import { Side } from '../types';
+import { Side } from '../types.ts';
 
 /**
  * LighterService: 与 Lighter.xyz (Arbitrum) 交互的逻辑
@@ -8,11 +8,9 @@ export class LighterService {
   private apiKey: string = '';
   private rpcUrl: string = 'https://arb1.arbitrum.io/rpc';
 
-  // 关键修复：增加动态更新方法
   updateCredentials(apiKey: string, rpcUrl: string) {
     this.apiKey = apiKey;
     this.rpcUrl = rpcUrl;
-    console.log(`[LighterAPI] 凭证已更新: RPC=${rpcUrl}, Key=${apiKey ? '***' : '未设置'}`);
   }
 
   // 模拟链上下单

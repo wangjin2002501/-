@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { LeaderTerminal } from './components/LeaderTerminal';
-import { FollowerTerminal } from './components/FollowerTerminal';
-import { MarketWidget } from './components/MarketWidget';
-import { TradeSignal, Side, ApiConfig } from './types';
-import { getTradingAdvice } from './services/geminiService';
+import { LeaderTerminal } from './components/LeaderTerminal.tsx';
+import { FollowerTerminal } from './components/FollowerTerminal.tsx';
+import { MarketWidget } from './components/MarketWidget.tsx';
+import { TradeSignal, Side, ApiConfig } from './types.ts';
+import { getTradingAdvice } from './services/geminiService.ts';
 
 const BROADCAST_CHANNEL_NAME = 'lighter_api_bridge_v2';
 
@@ -47,7 +47,9 @@ const App: React.FC = () => {
       type,
       originalAmount: amount
     };
-    channelRef.current?.postMessage(signal);
+    if (channelRef.current) {
+      channelRef.current.postMessage(signal);
+    }
   }, [btcPrice]);
 
   const refreshAiInsight = async () => {
