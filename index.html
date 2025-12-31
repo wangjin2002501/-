@@ -12,9 +12,23 @@
             font-family: 'Inter', sans-serif;
             background-color: #09090b;
             color: #fafafa;
+            margin: 0;
         }
         .mono {
             font-family: 'JetBrains+Mono', monospace;
+        }
+        /* 当 React 还没挂载时显示的加载状态 */
+        #root:empty::before {
+            content: '系统初始化中...';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            font-size: 13px;
+            color: #52525b;
+            font-family: 'JetBrains+Mono', monospace;
+            background: #020202;
         }
     </style>
 <script type="importmap">
@@ -22,6 +36,7 @@
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
     "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
   }
@@ -30,5 +45,7 @@
 </head>
 <body>
     <div id="root"></div>
+    <!-- 显式引入入口文件，确保在所有环境中都能正确触发加载 -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>

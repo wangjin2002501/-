@@ -1,20 +1,44 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// 安全地获取 API Key，防止 process 未定义导致黑屏
-const getApiKey = () => {
+/**
+ * 极度安全的环境变量获取方法
+ */
+const getSafeApiKey = (): string => {
   try {
-    return process.env.API_KEY || '';
+    // 必须使用 typeof 检查，否则直接访问 process 会在某些浏览器中抛错
+    if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+      return process.env.API_KEY;
+    }
   } catch (e) {
-    return '';
+    // 忽略任何环境变量访问错误
+  }
+  return '';
+};
+
+// 将 AI 实例放在函数内部初始化，防止在模块加载阶段崩溃
+let aiInstance: GoogleGenAI | null = null;
+
+const getAiClient = () => {
+  const apiKey = getSafeApiKey();
+  if (!apiKey) return null;
+  
+  try {
+    if (!aiInstance) {
+      aiInstance = new GoogleGenAI({ apiKey });
+    }
+    return aiInstance;
+  } catch (err) {
+    console.error("AI Client Initialization Failed:", err);
+    return null;
   }
 };
 
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
-
 export const getTradingAdvice = async (leaderPnl: number, followerPnl: number, marketPrice: number) => {
-  if (!getApiKey()) {
-    return "提示：未检测到 Gemini API Key，AI 策略分析已禁用。";
+  const ai = getAiClient();
+  
+  if (!ai) {
+    return "提示：系统检测到未配置 API_KEY。请在 Vercel 环境变量中设置 API_KEY 后重新部署。";
   }
 
   try {
@@ -34,6 +58,6 @@ export const getTradingAdvice = async (leaderPnl: number, followerPnl: number, m
     return response.text || "暂无分析数据。";
   } catch (error) {
     console.error("Gemini Insight Error:", error);
-    return "市场分析暂时不可用。请检查网络连接。";
+    return "策略中心当前无法连接。请检查网络。";
   }
 };
